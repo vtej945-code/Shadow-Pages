@@ -1,0 +1,1720 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadow Pages - Login | ITYUKTA 2K26</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;700;900&family=Fira+Code:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-bg: #0a0a0f;
+            --secondary-bg: #1a1a2e;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --neon-blue: #00d4ff;
+            --neon-purple: #8b5cf6;
+            --neon-pink: #f472b6;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --error-color: #ff0040;
+            --success-color: #00ff00;
+            --gradient-primary: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            --gradient-secondary: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+        }
+
+        body {
+            font-family: 'Orbitron', monospace;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Animated Background */
+        .animated-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            overflow: hidden;
+        }
+
+        /* Matrix Rain Canvas */
+        #matrix-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.2;
+            z-index: -1;
+        }
+
+        .bg-gradient {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+            animation: gradientShift 8s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+
+            0%,
+            100% {
+                background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+            }
+
+            50% {
+                background: radial-gradient(ellipse at center, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+            }
+        }
+
+        .bg-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(0, 212, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% {
+                transform: translate(0, 0);
+            }
+
+            100% {
+                transform: translate(50px, 50px);
+            }
+        }
+
+        /* Floating Particles */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--neon-blue);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--neon-blue);
+            animation: particleFloat 15s linear infinite;
+        }
+
+        .particle:nth-child(1) {
+            left: 10%;
+            animation-delay: 0s;
+            animation-duration: 12s;
+        }
+
+        .particle:nth-child(2) {
+            left: 20%;
+            animation-delay: 2s;
+            animation-duration: 18s;
+            background: var(--neon-purple);
+            box-shadow: 0 0 10px var(--neon-purple);
+        }
+
+        .particle:nth-child(3) {
+            left: 30%;
+            animation-delay: 4s;
+            animation-duration: 14s;
+        }
+
+        .particle:nth-child(4) {
+            left: 40%;
+            animation-delay: 6s;
+            animation-duration: 16s;
+            background: var(--neon-pink);
+            box-shadow: 0 0 10px var(--neon-pink);
+        }
+
+        .particle:nth-child(5) {
+            left: 60%;
+            animation-delay: 8s;
+            animation-duration: 20s;
+        }
+
+        .particle:nth-child(6) {
+            left: 70%;
+            animation-delay: 10s;
+            animation-duration: 13s;
+            background: var(--neon-purple);
+            box-shadow: 0 0 10px var(--neon-purple);
+        }
+
+        .particle:nth-child(7) {
+            left: 80%;
+            animation-delay: 12s;
+            animation-duration: 17s;
+        }
+
+        .particle:nth-child(8) {
+            left: 90%;
+            animation-delay: 14s;
+            animation-duration: 19s;
+            background: var(--neon-pink);
+            box-shadow: 0 0 10px var(--neon-pink);
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Login Container */
+        .login-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 50px 40px;
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow:
+                0 25px 50px rgba(0, 212, 255, 0.1),
+                0 0 100px rgba(139, 92, 246, 0.1);
+            animation: loginFadeIn 1.5s ease-out;
+        }
+
+        @keyframes loginFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+            animation: borderGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes borderGlow {
+
+            0%,
+            100% {
+                opacity: 0.5;
+                box-shadow: 0 0 20px var(--neon-blue);
+            }
+
+            50% {
+                opacity: 1;
+                box-shadow: 0 0 40px var(--neon-blue);
+            }
+        }
+
+        .login-container::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: var(--gradient-primary);
+            border-radius: 22px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .login-container:hover::after {
+            opacity: 0.1;
+        }
+
+        /* Enhanced Glitch Animation for SHADOW PAGES */
+        .main-title {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 900;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            margin-top: 20px;
+            position: relative;
+            animation: intenseGlitch 3s infinite;
+        }
+
+        @keyframes intenseGlitch {
+
+            0%,
+            90%,
+            100% {
+                transform: translate(0);
+                filter: hue-rotate(0deg);
+            }
+
+            1% {
+                transform: translate(-3px, -3px);
+                filter: hue-rotate(90deg);
+            }
+
+            2% {
+                transform: translate(3px, 3px);
+                filter: hue-rotate(180deg);
+            }
+
+            3% {
+                transform: translate(-3px, 3px);
+                filter: hue-rotate(270deg);
+            }
+
+            4% {
+                transform: translate(3px, -3px);
+                filter: hue-rotate(360deg);
+            }
+
+            5% {
+                transform: translate(0);
+                filter: hue-rotate(0deg);
+            }
+
+            10% {
+                transform: translate(-2px, 2px);
+                filter: hue-rotate(45deg);
+            }
+
+            15% {
+                transform: translate(2px, -2px);
+                filter: hue-rotate(135deg);
+            }
+
+            20% {
+                transform: translate(0);
+                filter: hue-rotate(0deg);
+            }
+        }
+
+        .main-title::before,
+        .main-title::after {
+            content: 'SHADOW PAGES';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .main-title::before {
+            background: var(--error-color);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glitchLayer1 0.2s infinite;
+        }
+
+        .main-title::after {
+            background: var(--neon-blue);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glitchLayer2 0.3s infinite;
+            z-index: -2;
+        }
+
+        @keyframes glitchLayer1 {
+
+            0%,
+            100% {
+                transform: translate(0);
+            }
+
+            10% {
+                transform: translate(-2px, 2px);
+            }
+
+            20% {
+                transform: translate(-2px, -2px);
+            }
+
+            30% {
+                transform: translate(2px, 2px);
+            }
+
+            40% {
+                transform: translate(2px, -2px);
+            }
+
+            50% {
+                transform: translate(-2px, 2px);
+            }
+
+            60% {
+                transform: translate(2px, 2px);
+            }
+
+            70% {
+                transform: translate(-2px, -2px);
+            }
+
+            80% {
+                transform: translate(2px, -2px);
+            }
+
+            90% {
+                transform: translate(-2px, 2px);
+            }
+        }
+
+        @keyframes glitchLayer2 {
+
+            0%,
+            100% {
+                transform: translate(0);
+            }
+
+            15% {
+                transform: translate(3px, -3px);
+            }
+
+            25% {
+                transform: translate(3px, 3px);
+            }
+
+            35% {
+                transform: translate(-3px, -3px);
+            }
+
+            45% {
+                transform: translate(-3px, 3px);
+            }
+
+            55% {
+                transform: translate(3px, -3px);
+            }
+
+            65% {
+                transform: translate(-3px, 3px);
+            }
+
+            75% {
+                transform: translate(3px, 3px);
+            }
+
+            85% {
+                transform: translate(-3px, -3px);
+            }
+
+            95% {
+                transform: translate(3px, -3px);
+            }
+        }
+
+        /* Typing Effect for Unauthorized Access Restricted */
+        .access-restricted {
+            font-size: 1rem;
+            color: var(--error-color);
+            font-family: 'Fira Code', monospace;
+            margin-bottom: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            animation: fadeInTyping 1s ease-out 2s both;
+        }
+
+        @keyframes fadeInTyping {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .typing-cursor {
+            color: var(--error-color);
+            animation: blink 1s infinite;
+            margin-left: 2px;
+        }
+
+        @keyframes blink {
+
+            0%,
+            50% {
+                opacity: 1;
+            }
+
+            51%,
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .sub-title {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            animation: subtitleFade 2s ease-out 0.5s both;
+        }
+
+        @keyframes subtitleFade {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Form Styles */
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            animation: formSlideUp 2s ease-out 1s both;
+        }
+
+        @keyframes formSlideUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 18px 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid var(--glass-border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-family: 'Fira Code', monospace;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+            margin-top: 15px;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--neon-blue);
+            background: rgba(0, 212, 255, 0.08);
+            box-shadow:
+                0 0 20px rgba(0, 212, 255, 0.3),
+                inset 0 0 20px rgba(0, 212, 255, 0.1),
+                inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .input-field::placeholder {
+            color: var(--text-muted);
+            font-family: 'Orbitron', monospace;
+            opacity: 0.8;
+        }
+
+        .input-field:hover {
+            border-color: rgba(0, 212, 255, 0.5);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .input-label {
+            position: absolute;
+            top: 0;
+            left: 15px;
+            background: var(--primary-bg);
+            padding: 0 10px;
+            font-size: 0.9rem;
+            color: var(--neon-blue);
+            font-weight: 500;
+            letter-spacing: 1px;
+            z-index: 10;
+        }
+
+        /* Checkbox Styles */
+        .checkbox-field {
+            width: 20px !important;
+            height: 20px !important;
+            padding: 0 !important;
+            margin: 15px 0 0 20px !important;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid var(--glass-border);
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-field:checked {
+            background: var(--neon-blue);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+        }
+
+        .checkbox-field:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--primary-bg);
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .checkbox-field:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+        }
+
+        .checkbox-text {
+            color: var(--text-muted);
+            font-family: 'Orbitron', monospace;
+            font-size: 0.9rem;
+            margin-left: 10px;
+            opacity: 0.8;
+        }
+
+        /* Checkbox Group Styles */
+        .checkbox-group {
+            margin: 15px 0;
+            text-align: left;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 10px 0;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-container:hover {
+            transform: translateX(5px);
+        }
+
+        .checkmark {
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid var(--glass-border);
+            border-radius: 4px;
+            margin-right: 12px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            display: none;
+        }
+
+        .checkbox-container input[type="checkbox"]:checked+.checkmark {
+            background: var(--neon-blue);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+        }
+
+        .checkbox-container input[type="checkbox"]:checked+.checkmark::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--primary-bg);
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .checkbox-container:hover .checkmark {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+        }
+
+        /* Enhanced Login Button */
+        .login-button {
+            padding: 18px 30px;
+            background: var(--glass-bg);
+            border: 2px solid var(--neon-blue);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: 'Orbitron', monospace;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .login-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .login-button:hover::before {
+            left: 100%;
+        }
+
+        .login-button:hover {
+            border-color: var(--neon-purple);
+            box-shadow:
+                0 0 30px rgba(0, 212, 255, 0.5),
+                0 0 60px rgba(139, 92, 246, 0.3);
+            transform: translateY(-2px);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .login-button:active {
+            transform: translateY(0);
+            box-shadow:
+                0 0 20px rgba(0, 212, 255, 0.3),
+                0 0 40px rgba(139, 92, 246, 0.2);
+        }
+
+        .login-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--glass-border);
+            border-top: 2px solid var(--neon-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Enhanced Shake Animation */
+        .shake-container {
+            animation: violentShake 0.8s ease-in-out;
+        }
+
+        @keyframes violentShake {
+
+            0%,
+            100% {
+                transform: translateX(0) translateY(0);
+            }
+
+            10% {
+                transform: translateX(-10px) translateY(-5px);
+            }
+
+            20% {
+                transform: translateX(10px) translateY(5px);
+            }
+
+            30% {
+                transform: translateX(-8px) translateY(-3px);
+            }
+
+            40% {
+                transform: translateX(8px) translateY(3px);
+            }
+
+            50% {
+                transform: translateX(-6px) translateY(-2px);
+            }
+
+            60% {
+                transform: translateX(6px) translateY(2px);
+            }
+
+            70% {
+                transform: translateX(-4px) translateY(-1px);
+            }
+
+            80% {
+                transform: translateX(4px) translateY(1px);
+            }
+
+            90% {
+                transform: translateX(-2px) translateY(0px);
+            }
+        }
+
+        /* Error Message */
+        .error-message {
+            background: rgba(255, 0, 64, 0.1);
+            border: 1px solid var(--error-color);
+            border-radius: 8px;
+            padding: 15px;
+            color: var(--error-color);
+            font-size: 0.9rem;
+            font-family: 'Fira Code', monospace;
+            margin-top: 20px;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+            animation: errorPulse 0.5s ease-in-out;
+        }
+
+        @keyframes errorPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 rgba(255, 0, 64, 0.5);
+            }
+
+            50% {
+                transform: scale(1.02);
+                box-shadow: 0 0 20px rgba(255, 0, 64, 0.5);
+            }
+        }
+
+        /* Success Message */
+        .success-message {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid var(--success-color);
+            border-radius: 8px;
+            padding: 15px;
+            color: var(--success-color);
+            font-size: 0.9rem;
+            font-family: 'Fira Code', monospace;
+            margin-top: 20px;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+            animation: successGlow 0.5s ease-in-out;
+        }
+
+        @keyframes successGlow {
+
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 rgba(0, 255, 0, 0.5);
+            }
+
+            50% {
+                transform: scale(1.02);
+                box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            }
+        }
+
+        /* Transition Overlay */
+        .transition-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-bg), var(--secondary-bg));
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .transition-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .transition-content {
+            text-align: center;
+        }
+
+        .transition-logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 3rem;
+            font-weight: 900;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+            animation: intenseGlitch 1s infinite;
+        }
+
+        .transition-loader {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(0, 212, 255, 0.3);
+            border-top: 3px solid var(--neon-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 40px 30px;
+                margin: 20px;
+            }
+
+            .main-title {
+                font-size: 2.5rem;
+            }
+
+            .sub-title {
+                font-size: 1rem;
+                margin-bottom: 15px;
+            }
+
+            .access-restricted {
+                font-size: 0.9rem;
+                margin-bottom: 15px;
+            }
+
+            .input-field {
+                padding: 15px 18px;
+                font-size: 0.9rem;
+            }
+
+            .login-button {
+                padding: 15px 25px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 30px 20px;
+            }
+
+            .main-title {
+                font-size: 2rem;
+            }
+
+            .sub-title {
+                font-size: 0.9rem;
+                letter-spacing: 1px;
+            }
+
+            .login-form {
+                gap: 20px;
+            }
+        }
+
+        /* Additional Glow Effects */
+        .glow-effect {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            animation: glowPulse 4s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes glowPulse {
+
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            50% {
+                opacity: 0.6;
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Animated Background -->
+    <div class="animated-background">
+        <canvas id="matrix-canvas"></canvas>
+        <div class="bg-gradient"></div>
+        <div class="bg-grid"></div>
+        <div class="particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+    </div>
+
+    <!-- Transition Overlay -->
+    <div class="transition-overlay" id="transitionOverlay">
+        <div class="transition-content">
+            <div class="transition-logo">SHADOW PAGES</div>
+            <div class="transition-loader"></div>
+            <p style="color: var(--neon-blue); margin-top: 20px; font-family: 'Fira Code', monospace;">
+                Accessing secure portal...
+            </p>
+        </div>
+    </div>
+
+    <!-- Login Container -->
+    <div class="login-container" id="loginContainer">
+        <div class="glow-effect"></div>
+
+        <h1 class="main-title">SHADOW PAGES</h1>
+        <p class="sub-title">Technical Event – ITYUKTA 2K26</p>
+        <div class="access-restricted" id="accessRestricted"></div>
+
+        <form class="login-form" id="loginForm">
+            <div class="input-group">
+                <label class="input-label">USERNAME</label>
+                <input type="text" class="input-field" id="username" placeholder="Enter the username" required autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">PASSWORD</label>
+                <input type="password" class="input-field" id="password" placeholder="Enter the password" required autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+            </div>
+
+            <button type="submit" class="login-button" id="loginBtn">
+                <span id="btnText">ACCESS SHADOW PAGES</span>
+                <div class="loading" id="loading"></div>
+            </button>
+
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+        </form>
+    </div>
+
+    <script>
+        // Matrix Rain Animation
+        class MatrixRain {
+            constructor() {
+                this.canvas = document.getElementById('matrix-canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                this.fontSize = 14;
+                this.columns = 0;
+                this.drops = [];
+                
+                this.init();
+                this.animate();
+            }
+            
+            init() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+                this.columns = Math.floor(this.canvas.width / this.fontSize);
+                this.drops = Array(this.columns).fill(1);
+            }
+            
+            animate() {
+                this.ctx.fillStyle = 'rgba(10, 10, 15, 0.04)';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                this.ctx.fillStyle = '#00d4ff';
+                this.ctx.font = `${this.fontSize}px 'Fira Code', monospace`;
+                
+                for (let i = 0; i < this.drops.length; i++) {
+                    const text = this.chars[Math.floor(Math.random() * this.chars.length)];
+                    const x = i * this.fontSize;
+                    const y = this.drops[i] * this.fontSize;
+                    
+                    this.ctx.shadowColor = '#00d4ff';
+                    this.ctx.shadowBlur = 10;
+                    this.ctx.fillText(text, x, y);
+                    this.ctx.shadowBlur = 0;
+                    
+                    if (y > this.canvas.height && Math.random() > 0.975) {
+                        this.drops[i] = 0;
+                    }
+                    this.drops[i]++;
+                }
+                
+                requestAnimationFrame(() => this.animate());
+            }
+            
+            resize() {
+                this.init();
+            }
+        }
+
+        // Typing effect for "Unauthorized Access Restricted"
+        function typeText(element, text, speed = 100) {
+            let i = 0;
+            element.innerHTML = '';
+            
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                } else {
+                    // Add blinking cursor
+                    element.innerHTML += '<span class="typing-cursor">|</span>';
+                }
+            }
+            type();
+        }
+
+        // Login form handling
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const loginBtn = document.getElementById('loginBtn');
+            const btnText = document.getElementById('btnText');
+            const loading = document.getElementById('loading');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            const loginContainer = document.getElementById('loginContainer');
+            const transitionOverlay = document.getElementById('transitionOverlay');
+            
+            // Clear previous messages
+            errorMessage.classList.remove('show');
+            successMessage.classList.remove('show');
+            
+            // Basic validation
+            if (!username || !password) {
+                showError('Please fill in all fields');
+                return;
+            }
+            
+            // Show loading state
+            loginBtn.disabled = true;
+            btnText.style.display = 'none';
+            loading.style.display = 'block';
+            
+            // Simulate authentication with specific password
+            setTimeout(() => {
+                // Check for specific password: "ITYUKTA 2K26"
+                if (username.length >= 3 && password === 'ITYUKTA 2K26') {
+                    // Success
+                    showSuccess('Access granted! Redirecting to Shadow Pages...');
+                    
+                    // Store user session
+                    localStorage.setItem('participantName', username);
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('loginTime', Date.now().toString());
+                    
+                    // Show transition overlay
+                    setTimeout(() => {
+                        transitionOverlay.classList.add('active');
+                        
+                        // Redirect to home page after transition
+                        setTimeout(() => {
+                            window.location.href = 'index.html';
+                        }, 2000);
+                    }, 1000);
+                    
+                } else {
+                    // Error - show specific message for wrong password
+                    if (password !== 'ITYUKTA 2K26') {
+                        showError('Invalid password. Please enter the correct event password.');
+                    } else {
+                        showError('Username must be at least 3 characters long.');
+                    }
+                    
+                    loginContainer.classList.add('shake-container');
+                    
+                    setTimeout(() => {
+                        loginContainer.classList.remove('shake-container');
+                    }, 800);
+                }
+                
+                // Reset button state
+                loginBtn.disabled = false;
+                btnText.style.display = 'inline';
+                loading.style.display = 'none';
+                
+            }, 2000); // Simulate network delay
+            
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.classList.add('show');
+                setTimeout(() => {
+                    errorMessage.classList.remove('show');
+                }, 5000);
+            }
+            
+            function showSuccess(message) {
+                successMessage.textContent = message;
+                successMessage.classList.add('show');
+            }
+        });
+
+        // Initialize everything when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize matrix rain
+            new MatrixRain();
+            
+            // Start typing effect after a delay
+            setTimeout(() => {
+                const accessRestricted = document.getElementById('accessRestricted');
+                typeText(accessRestricted, 'UNAUTHORIZED ACCESS RESTRICTED', 80);
+            }, 2500);
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                const canvas = document.getElementById('matrix-canvas');
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+            
+            // Clear any existing login session to ensure fresh login
+            console.log('Login page loaded - clearing any existing session');
+        });
+    </script>
+</body>
+</html>
+                <div class="loading" id="loading"></div>
+            </button>
+        </form>
+
+        <div class="error-message" id="errorMessage">
+            ⚠️ ACCESS DENIED: Invalid credentials. Please try again.
+        </div>
+
+        <div class="success-message" id="successMessage">
+            ✅ ACCESS GRANTED: Redirecting to Shadow Pages...
+        </div>
+    </div>
+
+    <script>
+        // Matrix Rain Animation
+        class MatrixRain {
+            constructor() {
+                this.canvas = document.getElementById('matrix-canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                this.fontSize = 14;
+                this.columns = 0;
+                this.drops = [];
+
+                this.init();
+                this.animate();
+            }
+
+            init() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+                this.columns = Math.floor(this.canvas.width / this.fontSize);
+                this.drops = Array(this.columns).fill(1);
+            }
+
+            animate() {
+                this.ctx.fillStyle = 'rgba(10, 10, 15, 0.04)';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+                this.ctx.fillStyle = '#00d4ff';
+                this.ctx.font = `${this.fontSize}px 'Fira Code', monospace`;
+
+                for (let i = 0; i < this.drops.length; i++) {
+                    const text = this.chars[Math.floor(Math.random() * this.chars.length)];
+                    const x = i * this.fontSize;
+                    const y = this.drops[i] * this.fontSize;
+
+                    // Add glow effect
+                    this.ctx.shadowColor = '#00d4ff';
+                    this.ctx.shadowBlur = 10;
+                    this.ctx.fillText(text, x, y);
+                    this.ctx.shadowBlur = 0;
+
+                    if (y > this.canvas.height && Math.random() > 0.975) {
+                        this.drops[i] = 0;
+                    }
+                    this.drops[i]++;
+                }
+
+                requestAnimationFrame(() => this.animate());
+            }
+
+            resize() {
+                this.init();
+            }
+        }
+
+        // Typing Effect
+        class TypingEffect {
+            constructor(element, text, speed = 100) {
+                this.element = element;
+                this.text = text;
+                this.speed = speed;
+                this.index = 0;
+
+                this.element.innerHTML = '';
+                this.type();
+            }
+
+            type() {
+                if (this.index < this.text.length) {
+                    this.element.innerHTML += this.text.charAt(this.index);
+                    this.index++;
+                    setTimeout(() => this.type(), this.speed);
+                } else {
+                    // Add blinking cursor
+                    this.element.innerHTML += '<span class="typing-cursor">|</span>';
+                }
+            }
+        }
+
+        // Enhanced Login System
+        class LoginSystem {
+            constructor() {
+                this.form = document.getElementById('loginForm');
+                this.usernameField = document.getElementById('username');
+                this.passwordField = document.getElementById('password');
+                this.loginBtn = document.getElementById('loginBtn');
+                this.btnText = document.getElementById('btnText');
+                this.loading = document.getElementById('loading');
+                this.errorMessage = document.getElementById('errorMessage');
+                this.successMessage = document.getElementById('successMessage');
+                this.loginContainer = document.getElementById('loginContainer');
+                this.transitionOverlay = document.getElementById('transitionOverlay');
+
+                this.correctPassword = 'ITYUKTA 2K26';
+                this.isLoading = false;
+
+                this.init();
+            }
+
+            init() {
+                // Form submission
+                this.form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleLogin();
+                });
+
+                // Enter key support
+                this.passwordField.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !this.isLoading) {
+                        this.handleLogin();
+                    }
+                });
+
+                // Clear messages on input
+                this.usernameField.addEventListener('input', () => this.clearMessages());
+                this.passwordField.addEventListener('input', () => this.clearMessages());
+
+                // Add input focus effects
+                this.addInputEffects();
+
+                // Add sound effects
+                this.addSoundEffects();
+            }
+
+            handleLogin() {
+                if (this.isLoading) return;
+
+                const username = this.usernameField.value.trim();
+                const password = this.passwordField.value;
+
+                // Basic validation
+                if (!username || !password) {
+                    this.showError('Please fill in all fields.');
+                    return;
+                }
+
+                this.startLoading();
+
+                // Simulate authentication delay
+                setTimeout(() => {
+                    if (password === this.correctPassword) {
+                        this.handleSuccess();
+                    } else {
+                        this.handleError();
+                    }
+                }, 1500);
+            }
+
+            startLoading() {
+                this.isLoading = true;
+                this.loginBtn.disabled = true;
+                this.btnText.style.display = 'none';
+                this.loading.style.display = 'block';
+                this.clearMessages();
+
+                // Add loading glow effect
+                this.loginBtn.style.borderColor = '#8b5cf6';
+                this.loginBtn.style.boxShadow = '0 0 20px rgba(139, 92, 246, 0.5)';
+
+                // Play button click sound
+                this.playButtonClickSound();
+            }
+
+            stopLoading() {
+                this.isLoading = false;
+                this.loginBtn.disabled = false;
+                this.btnText.style.display = 'inline';
+                this.loading.style.display = 'none';
+
+                // Reset button styles
+                this.loginBtn.style.borderColor = '';
+                this.loginBtn.style.boxShadow = '';
+            }
+
+            handleSuccess() {
+                this.stopLoading();
+                this.showSuccess();
+                this.playSuccessSound();
+
+                // Add success glow to container
+                this.loginContainer.style.borderColor = '#00ff00';
+                this.loginContainer.style.boxShadow = '0 0 50px rgba(0, 255, 0, 0.3)';
+
+                // Show transition overlay and redirect
+                setTimeout(() => {
+                    this.showTransition();
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2000);
+                }, 1000);
+            }
+
+            handleError() {
+                this.stopLoading();
+                this.showError();
+                this.playErrorSound();
+                this.shakeContainer();
+
+                // Clear password field
+                this.passwordField.value = '';
+                this.passwordField.focus();
+            }
+
+            showError(message = '⚠️ ACCESS DENIED: Invalid credentials. Please try again.') {
+                this.clearMessages();
+                this.errorMessage.textContent = message;
+                this.errorMessage.classList.add('show');
+
+                // Auto hide after 5 seconds
+                setTimeout(() => {
+                    this.errorMessage.classList.remove('show');
+                }, 5000);
+            }
+
+            showSuccess(message = '✅ ACCESS GRANTED: Redirecting to Shadow Pages...') {
+                this.clearMessages();
+                this.successMessage.textContent = message;
+                this.successMessage.classList.add('show');
+            }
+
+            clearMessages() {
+                this.errorMessage.classList.remove('show');
+                this.successMessage.classList.remove('show');
+            }
+
+            shakeContainer() {
+                this.loginContainer.classList.add('shake-container');
+                setTimeout(() => {
+                    this.loginContainer.classList.remove('shake-container');
+                }, 800);
+            }
+
+            showTransition() {
+                this.transitionOverlay.classList.add('active');
+            }
+
+            addInputEffects() {
+                const inputs = [this.usernameField, this.passwordField];
+
+                inputs.forEach(input => {
+                    input.addEventListener('focus', () => {
+                        input.parentElement.style.transform = 'scale(1.02)';
+                        input.parentElement.style.transition = 'transform 0.3s ease';
+                    });
+
+                    input.addEventListener('blur', () => {
+                        input.parentElement.style.transform = 'scale(1)';
+                    });
+                });
+            }
+
+            addSoundEffects() {
+                // Button hover sound
+                this.loginBtn.addEventListener('mouseenter', () => {
+                    this.playHoverSound();
+                });
+            }
+
+            // Enhanced Sound effects using Web Audio API
+            playSound(frequency, duration, type = 'sine', volume = 0.1) {
+                if (!window.AudioContext && !window.webkitAudioContext) return;
+
+                try {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+
+                    oscillator.frequency.value = frequency;
+                    oscillator.type = type;
+
+                    gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + duration);
+                } catch (error) {
+                    // Silently fail if audio context is not available
+                }
+            }
+
+            playTypingSound() {
+                this.playSound(1200, 0.05, 'square', 0.05);
+            }
+
+            playHoverSound() {
+                this.playSound(880, 0.1, 'sine', 0.08);
+            }
+
+            playButtonClickSound() {
+                // Enhanced button click with multiple tones
+                this.playSound(660, 0.1, 'sine', 0.1);
+                setTimeout(() => this.playSound(880, 0.1, 'sine', 0.08), 50);
+                setTimeout(() => this.playSound(1100, 0.1, 'sine', 0.06), 100);
+            }
+
+            playSuccessSound() {
+                // Success chord progression
+                setTimeout(() => this.playSound(523, 0.3, 'sine', 0.1), 0);
+                setTimeout(() => this.playSound(659, 0.3, 'sine', 0.1), 150);
+                setTimeout(() => this.playSound(784, 0.4, 'sine', 0.1), 300);
+                setTimeout(() => this.playSound(1047, 0.5, 'sine', 0.08), 450);
+            }
+
+            playErrorSound() {
+                // Enhanced error sound with distortion
+                this.playSound(200, 0.2, 'sawtooth', 0.15);
+                setTimeout(() => this.playSound(150, 0.2, 'sawtooth', 0.12), 100);
+                setTimeout(() => this.playSound(100, 0.3, 'sawtooth', 0.1), 200);
+            }
+        }
+
+        // Particle animation enhancement
+        class ParticleEnhancement {
+            constructor() {
+                this.particles = document.querySelectorAll('.particle');
+                this.init();
+            }
+
+            init() {
+                // Add mouse interaction
+                document.addEventListener('mousemove', (e) => {
+                    this.particles.forEach((particle, index) => {
+                        const rect = particle.getBoundingClientRect();
+                        const particleX = rect.left + rect.width / 2;
+                        const particleY = rect.top + rect.height / 2;
+
+                        const distance = Math.sqrt(
+                            Math.pow(e.clientX - particleX, 2) +
+                            Math.pow(e.clientY - particleY, 2)
+                        );
+
+                        if (distance < 100) {
+                            const force = (100 - distance) / 100;
+                            const angle = Math.atan2(particleY - e.clientY, particleX - e.clientX);
+                            const moveX = Math.cos(angle) * force * 20;
+                            const moveY = Math.sin(angle) * force * 20;
+
+                            particle.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                            particle.style.transition = 'transform 0.3s ease-out';
+                        } else {
+                            particle.style.transform = '';
+                        }
+                    });
+                });
+            }
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize matrix rain
+            const matrixRain = new MatrixRain();
+
+            // Initialize typing effect for "Unauthorized Access Restricted"
+            setTimeout(() => {
+                const accessRestricted = document.getElementById('accessRestricted');
+                new TypingEffect(accessRestricted, 'UNAUTHORIZED ACCESS RESTRICTED', 80);
+            }, 3000);
+
+            // Initialize login system
+            new LoginSystem();
+
+            // Initialize particle enhancement
+            new ParticleEnhancement();
+
+            // Add keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                // ESC to clear form
+                if (e.key === 'Escape') {
+                    document.getElementById('username').value = '';
+                    document.getElementById('password').value = '';
+                    document.querySelector('.error-message').classList.remove('show');
+                    document.querySelector('.success-message').classList.remove('show');
+                }
+            });
+
+            // Add clear checkbox functionality
+            const clearUsernameCheckbox = document.getElementById('clearUsername');
+            const clearPasswordCheckbox = document.getElementById('clearPassword');
+            const usernameField = document.getElementById('username');
+            const passwordField = document.getElementById('password');
+
+            clearUsernameCheckbox.addEventListener('change', () => {
+                if (clearUsernameCheckbox.checked) {
+                    usernameField.value = '';
+                    usernameField.focus();
+                }
+            });
+
+            clearPasswordCheckbox.addEventListener('change', () => {
+                if (clearPasswordCheckbox.checked) {
+                    passwordField.value = '';
+                    passwordField.focus();
+                    // Uncheck after clearing
+                    setTimeout(() => {
+                        clearPasswordCheckbox.checked = false;
+                    }, 300);
+                }
+            });
+
+            // Auto-uncheck username clear checkbox after clearing
+            clearUsernameCheckbox.addEventListener('change', () => {
+                if (clearUsernameCheckbox.checked) {
+                    setTimeout(() => {
+                        clearUsernameCheckbox.checked = false;
+                    }, 300);
+                }
+            });
+
+            // Add focus to username field after page load
+            setTimeout(() => {
+                document.getElementById('username').focus();
+            }, 4000);
+
+            // Handle window resize for matrix rain
+            window.addEventListener('resize', () => {
+                matrixRain.resize();
+            });
+        });
+
+        // Handle page visibility for animations
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                // Pause animations when tab is not visible
+                document.body.style.animationPlayState = 'paused';
+            } else {
+                // Resume animations when tab becomes visible
+                document.body.style.animationPlayState = 'running';
+            }
+        });
+    </script>
+</body>
+
+</html>

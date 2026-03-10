@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 5 - Final Challenge | Shadow Pages</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;700;900&family=Fira+Code:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-bg: #0a0a0f;
+            --secondary-bg: #1a1a2e;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --neon-blue: #00d4ff;
+            --neon-purple: #8b5cf6;
+            --neon-pink: #f472b6;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --success-color: #00ff00;
+            --gradient-primary: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+        }
+
+        body {
+            font-family: 'Orbitron', monospace;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .level-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .level-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 900;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            animation: finalGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes finalGlow {
+            0% { filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5)); }
+            100% { filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.8)); }
+        }
+
+        .level-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .level-info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .info-item {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 15px 25px;
+            text-align: center;
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            color: var(--neon-blue);
+            font-weight: 700;
+        }
+
+        .question-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 25px 50px rgba(0, 212, 255, 0.1);
+        }
+
+        .question-title {
+            font-size: 1.5rem;
+            color: var(--neon-blue);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: var(--text-secondary);
+        }
+
+        .challenge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .mini-challenge {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .mini-title {
+            color: var(--neon-purple);
+            font-size: 1rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .mini-content {
+            font-family: 'Fira Code', monospace;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+        }
+
+        .mini-input {
+            width: 80px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 5px;
+            color: var(--text-primary);
+            font-family: 'Fira Code', monospace;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .mini-input:focus {
+            outline: none;
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+        }
+
+        .final-answer {
+            background: rgba(0, 212, 255, 0.1);
+            border: 2px solid var(--neon-blue);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .final-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid var(--glass-border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 1.3rem;
+            font-family: 'Fira Code', monospace;
+            text-align: center;
+            margin: 20px 10px;
+            transition: all 0.3s ease;
+        }
+
+        .final-input:focus {
+            outline: none;
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .submit-btn {
+            background: var(--glass-bg);
+            border: 2px solid var(--neon-blue);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: 'Orbitron', monospace;
+            padding: 15px 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            margin: 20px 10px;
+        }
+
+        .submit-btn:hover {
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .result-message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .result-message.success {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .result-message.error {
+            background: rgba(255, 0, 64, 0.1);
+            border: 1px solid #ff0040;
+            color: #ff0040;
+        }
+
+        .victory-message {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(139, 92, 246, 0.2));
+            border: 2px solid var(--neon-blue);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-top: 30px;
+            display: none;
+            animation: victoryGlow 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes victoryGlow {
+            0% { box-shadow: 0 0 20px rgba(0, 212, 255, 0.3); }
+            100% { box-shadow: 0 0 40px rgba(139, 92, 246, 0.5); }
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            padding: 10px 20px;
+            text-decoration: none;
+            font-family: 'Orbitron', monospace;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 10px;
+            }
+            
+            .question-container, .final-answer, .victory-message {
+                padding: 20px;
+            }
+            
+            .level-info {
+                gap: 15px;
+            }
+            
+            .challenge-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+    
+    <a href="level4.html" class="back-btn">← Back to Level 4</a>
+    
+    <div class="container">
+        <div class="level-header">
+            <h1 class="level-title">LEVEL 5</h1>
+            <p class="level-subtitle">Final Brain Challenge</p>
+        </div>
+        
+        <div class="level-info">
+            <div class="info-item">
+                <div class="info-label">Difficulty</div>
+                <div class="info-value">Legendary</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Points</div>
+                <div class="info-value">500</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Total Time</div>
+                <div class="info-value" id="totalTimer">00:00:00</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Attempts Left</div>
+                <div class="info-value" id="attemptsLeft">5</div>
+            </div>
+        </div>
+        
+        <div class="question-container">
+            <h2 class="question-title">🧠 The Ultimate Logic Challenge</h2>
+            <p class="question-text">
+                This is the final test - a complex logic puzzle that requires careful analysis and deduction.
+            </p>
+            
+            <div class="challenge-grid">
+                <div class="mini-challenge" style="grid-column: 1 / -1;">
+                    <div class="mini-title">Logic Puzzle</div>
+                    <div class="mini-content" style="font-size: 1rem; line-height: 1.6; text-align: left;">
+                        <strong>Three hackers — A, B, and C.</strong><br><br>
+                        • One always tells the truth.<br>
+                        • One always lies.<br>
+                        • One alternates between truth and lie (starting with truth).<br><br>
+                        
+                        <strong>They say:</strong><br>
+                        A: "B is the liar."<br>
+                        B: "C is the alternator."<br>
+                        C: "A is the truth-teller."<br><br>
+                        
+                        <strong>Who is who?</strong>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="final-answer">
+                <h3 style="color: var(--neon-blue); margin-bottom: 20px;">Final Challenge</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 20px;">
+                    Enter your answer in the format: A-Role, B-Role, C-Role
+                </p>
+                <p style="color: var(--neon-purple); margin-bottom: 20px;">
+                    <strong>Example:</strong> A-Truth, B-Liar, C-Alternator
+                </p>
+                <input type="text" class="final-input" id="finalAnswer" placeholder="Enter your answer..." maxlength="50" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+            </div>
+            
+            <div style="text-align: center;">
+                <button class="submit-btn" onclick="checkAnswer()">Complete Challenge</button>
+            </div>
+            
+            <div class="result-message" id="resultMessage"></div>
+        </div>
+        
+        <div class="victory-message" id="victoryMessage">
+            <h2 style="color: var(--neon-blue); margin-bottom: 20px;">🎉 CONGRATULATIONS! 🎉</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 20px;">
+                You have successfully completed all 5 levels of Shadow Pages!
+            </p>
+            <p style="color: var(--neon-purple); margin-bottom: 30px;">
+                You are now officially a <strong>SHADOW PAGES FINISHER</strong>!
+            </p>
+            <button class="submit-btn" onclick="goToHome()">Return to Home</button>
+        </div>
+    </div>
+
+    <script>
+        // Correct answer: A-Alternator, B-Liar, C-Truth
+        // Logic: If A is alternator (first statement is truth), then B is liar (true)
+        // If B is liar, then "C is alternator" is false, so C is truth-teller
+        // If C is truth-teller, then "A is truth-teller" is false, confirming A is alternator
+        
+        function checkAnswer() {
+            const finalAnswer = document.getElementById('finalAnswer').value.trim().toLowerCase();
+            const resultMessage = document.getElementById('resultMessage');
+            
+            if (!finalAnswer) {
+                showResult('Please enter your answer!', 'error');
+                return;
+            }
+            
+            // Check global attempt limit across all levels
+            let totalAttempts = parseInt(localStorage.getItem('totalAttempts') || '0');
+            if (totalAttempts >= 5) {
+                showResult('❌ Game Over! You have exceeded the maximum of 5 attempts across all levels.', 'error');
+                setTimeout(() => {
+                    alert('Challenge failed! You used all 5 attempts across all levels. Redirecting to home page.');
+                    localStorage.removeItem('totalAttempts');
+                    localStorage.removeItem('challengeStartTime');
+                    window.location.href = 'index.html';
+                }, 2000);
+                return;
+            }
+            
+            // Check for correct answer variations
+            const correctAnswers = [
+                'a-alternator, b-liar, c-truth',
+                'a-alternator, b-liar, c-truth-teller',
+                'a alternator b liar c truth',
+                'a alternator b liar c truth teller',
+                'alternator liar truth',
+                'alternator liar truth-teller'
+            ];
+            
+            const normalizedAnswer = finalAnswer.replace(/[^\w\s,-]/g, '').replace(/\s+/g, ' ');
+            const isCorrect = correctAnswers.some(correct => 
+                normalizedAnswer.includes(correct) ||
+                (normalizedAnswer.includes('alternator') && normalizedAnswer.includes('liar') && normalizedAnswer.includes('truth'))
+            );
+            
+            if (isCorrect) {
+                // Disable tab monitoring since challenge is completed
+                challengeCompleted = true;
+                
+                // Set challenge status to completed
+                localStorage.setItem('challengeStatus', 'completed');
+                
+                showResult('🎉 PERFECT! You solved the logic puzzle correctly!', 'success');
+                
+                // Add to leaderboard and get final time
+                const finalTime = addToLeaderboard();
+                
+                setTimeout(() => {
+                    // Update victory message with completion time
+                    const victoryMessage = document.getElementById('victoryMessage');
+                    
+                    // Add completion time to victory message
+                    const timeDisplay = document.createElement('div');
+                    timeDisplay.style.cssText = `
+                        background: rgba(0, 255, 0, 0.1);
+                        border: 2px solid var(--success-color);
+                        border-radius: 15px;
+                        padding: 20px;
+                        margin: 20px 0;
+                        font-size: 1.5rem;
+                        font-weight: bold;
+                        color: var(--success-color);
+                    `;
+                    timeDisplay.innerHTML = `
+                        <div style="margin-bottom: 10px;">🏆 FINAL COMPLETION TIME 🏆</div>
+                        <div style="font-size: 2rem; font-family: 'Fira Code', monospace;">${finalTime}</div>
+                    `;
+                    
+                    // Insert time display before the return button
+                    const returnButton = victoryMessage.querySelector('.submit-btn');
+                    victoryMessage.insertBefore(timeDisplay, returnButton);
+                    
+                    victoryMessage.style.display = 'block';
+                    document.querySelector('.question-container').style.display = 'none';
+                }, 2000);
+            } else {
+                // Increment global attempt counter
+                totalAttempts++;
+                localStorage.setItem('totalAttempts', totalAttempts.toString());
+                const remaining = 5 - totalAttempts;
+                
+                if (remaining > 0) {
+                    showResult(`❌ Incorrect. Think through each possibility systematically. ${remaining} attempts remaining across all levels!`, 'error');
+                    updateAttemptsDisplay();
+                } else {
+                    // Show correct answer when limit exceeded
+                    showResult('❌ Game Over! You have used all 5 attempts across all levels. The correct answer was: A-Alternator, B-Liar, C-Truth-teller', 'error');
+                    
+                    // Update user status to failed and set challenge status
+                    updateUserProgress(5, 'failed');
+                    localStorage.setItem('challengeStatus', 'failed');
+                    
+                    // Disable input and button
+                    document.getElementById('finalAnswer').disabled = true;
+                    document.querySelector('.submit-btn').disabled = true;
+                    document.querySelector('.submit-btn').style.opacity = '0.5';
+                    document.querySelector('.submit-btn').style.cursor = 'not-allowed';
+                    
+                    setTimeout(() => {
+                        alert('Challenge failed! You used all 5 attempts across all levels. The correct answer was: A-Alternator, B-Liar, C-Truth-teller. Redirecting to home page.');
+                        localStorage.removeItem('totalAttempts');
+                        localStorage.removeItem('challengeStartTime');
+                        goToHome();
+                    }, 8000);
+                }
+            }
+        }
+        
+        function addToLeaderboard() {
+            // Get completion time
+            const challengeStartTime = localStorage.getItem('challengeStartTime');
+            if (!challengeStartTime) return '00:00:00';
+            
+            const completionTime = new Date().getTime();
+            const totalTime = completionTime - parseInt(challengeStartTime);
+            
+            // Stop the timer
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            
+            // Format time as HH:MM:SS for display
+            const hours = Math.floor(totalTime / (1000 * 60 * 60));
+            const minutes = Math.floor((totalTime % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((totalTime % (1000 * 60)) / 1000);
+            const fullFormattedTime = 
+                String(hours).padStart(2, '0') + ':' +
+                String(minutes).padStart(2, '0') + ':' +
+                String(seconds).padStart(2, '0');
+            
+            // Format time as MM:SS for leaderboard
+            const totalMinutes = Math.floor(totalTime / (1000 * 60));
+            const remainingSeconds = Math.floor((totalTime % (1000 * 60)) / 1000);
+            const leaderboardTime = String(totalMinutes).padStart(2, '0') + ':' + String(remainingSeconds).padStart(2, '0');
+            
+            // Update the timer display to show final time
+            document.getElementById('totalTimer').textContent = fullFormattedTime;
+            document.getElementById('totalTimer').style.color = 'var(--success-color)';
+            document.getElementById('totalTimer').style.fontWeight = 'bold';
+            
+            // Get or create participant name
+            let participantName = localStorage.getItem('participantName');
+            if (!participantName) {
+                participantName = prompt('Congratulations! Enter your name for the leaderboard:') || 'Anonymous';
+                localStorage.setItem('participantName', participantName);
+            }
+            
+            // Create leaderboard entry
+            const leaderboardEntry = {
+                name: participantName,
+                level: 5,
+                time: leaderboardTime,
+                status: 'completed',
+                timestamp: completionTime
+            };
+            
+            // Get existing leaderboard data
+            let leaderboardData = JSON.parse(localStorage.getItem('leaderboardData') || '[]');
+            
+            // Add new entry
+            leaderboardData.push(leaderboardEntry);
+            
+            // Sort by completion time (fastest first)
+            leaderboardData.sort((a, b) => {
+                if (a.status === 'completed' && b.status !== 'completed') return -1;
+                if (a.status !== 'completed' && b.status === 'completed') return 1;
+                if (a.status === 'completed' && b.status === 'completed') {
+                    return a.timestamp - b.timestamp;
+                }
+                return 0;
+            });
+            
+            // Save updated leaderboard
+            localStorage.setItem('leaderboardData', JSON.stringify(leaderboardData));
+            
+            // Store final completion time for display
+            localStorage.setItem('finalCompletionTime', fullFormattedTime);
+            
+            // Trigger immediate leaderboard refresh on homepage
+            if (window.opener && window.opener.animatedLeaderboard) {
+                window.opener.animatedLeaderboard.forceRefresh();
+            }
+            
+            // Clear challenge data
+            localStorage.removeItem('challengeStartTime');
+            
+            // Return the formatted time for display
+            return fullFormattedTime;
+        }
+        
+        function showResult(message, type) {
+            const resultMessage = document.getElementById('resultMessage');
+            resultMessage.textContent = message;
+            resultMessage.className = `result-message ${type}`;
+            resultMessage.style.display = 'block';
+            
+            setTimeout(() => {
+                if (type === 'error') {
+                    resultMessage.style.display = 'none';
+                }
+            }, 4000);
+        }
+        
+        // Allow Enter key to submit
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+        
+        // Timer functionality
+        let startTime = null;
+        let timerInterval = null;
+        
+        function initializeTimer() {
+            // Get the challenge start time from localStorage
+            const challengeStartTime = localStorage.getItem('challengeStartTime');
+            
+            if (challengeStartTime) {
+                startTime = parseInt(challengeStartTime);
+                // Start the timer display
+                updateTimer();
+                timerInterval = setInterval(updateTimer, 1000);
+            }
+        }
+        
+        function updateTimer() {
+            const currentTime = new Date().getTime();
+            const elapsedTime = currentTime - startTime;
+            
+            const hours = Math.floor(elapsedTime / (1000 * 60 * 60));
+            const minutes = Math.floor((elapsedTime % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((elapsedTime % (1000 * 60)) / 1000);
+            
+            const formattedTime = 
+                String(hours).padStart(2, '0') + ':' +
+                String(minutes).padStart(2, '0') + ':' +
+                String(seconds).padStart(2, '0');
+            
+            document.getElementById('totalTimer').textContent = formattedTime;
+        }
+        
+        // Update attempts display
+        function updateAttemptsDisplay() {
+            const attempts = parseInt(localStorage.getItem('totalAttempts') || '0');
+            const remaining = 5 - attempts;
+            document.getElementById('attemptsLeft').textContent = remaining;
+            if (remaining <= 2) {
+                document.getElementById('attemptsLeft').style.color = '#ff0040';
+            }
+        }
+        
+        // Function to exit fullscreen
+        function exitFullscreen() {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        }
+
+        // Function to go home with fullscreen exit
+        function goToHome() {
+            challengeCompleted = true; // Disable fullscreen monitoring
+            exitFullscreen();
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 500); // Small delay to ensure fullscreen exits
+        }
+        
+        function enterFullscreen() {
+            const elem = document.documentElement;
+            
+            // Try different fullscreen methods for cross-browser compatibility
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen().catch(err => {
+                    console.log('Fullscreen request failed:', err);
+                });
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            }
+            
+            // Additional attempt with different element
+            if (!document.fullscreenElement) {
+                setTimeout(() => {
+                    if (document.body.requestFullscreen) {
+                        document.body.requestFullscreen().catch(err => {
+                            console.log('Body fullscreen request failed:', err);
+                        });
+                    }
+                }, 100);
+            }
+        }
+
+        // Monitor tab switching and visibility - IMMEDIATE TERMINATION
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && !challengeCompleted) {
+                // Stop the timer
+                clearInterval(window.timerInterval);
+                
+                // Get elapsed time
+                const startTime = parseInt(localStorage.getItem('challengeStartTime'));
+                const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+                const minutes = Math.floor(elapsedTime / 60);
+                const seconds = elapsedTime % 60;
+                
+                // Show correct answer
+                const correctAnswer = 'A-Alternator, B-Liar, C-Truth-teller';
+                
+                alert(`⚠️ CHALLENGE TERMINATED!\n\nYou switched tabs/browsers during the challenge.\n\nCorrect Answer for Level 5:\n${correctAnswer}\n\nYour Time: ${minutes}m ${seconds}s\n\nRedirecting to home page...`);
+                
+                // Update user status to failed
+                updateUserProgress(5, 'failed');
+                localStorage.setItem('challengeStatus', 'failed');
+                localStorage.removeItem('totalAttempts');
+                localStorage.removeItem('tabSwitchCount');
+                
+                // Redirect to home page
+                goToHome();
+            }
+        });
+
+        // Prevent right-click and common shortcuts
+        document.addEventListener('contextmenu', (e) => e.preventDefault());
+        document.addEventListener('keydown', (e) => {
+            // Prevent F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, and ESC
+            if (e.key === 'F12' || 
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) ||
+                (e.ctrlKey && e.key === 'u') ||
+                e.key === 'Escape') {
+                e.preventDefault();
+                if (e.key === 'Escape') {
+                    alert('Fullscreen mode is locked during the challenge for security.');
+                    // Force back to fullscreen if user somehow exits
+                    setTimeout(() => {
+                        if (!document.fullscreenElement) {
+                            enterFullscreen();
+                        }
+                    }, 100);
+                } else {
+                    alert('Developer tools are disabled during the challenge.');
+                }
+            }
+        });
+        
+        // Auto-focus input and initialize timer
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if already in fullscreen, if not show prompt
+            if (!document.fullscreenElement) {
+                showFullscreenPrompt();
+            } else {
+                initializeLevel();
+            }
+        });
+
+        // Show fullscreen prompt and handle user interaction
+        function showFullscreenPrompt() {
+            // Create fullscreen overlay
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.95);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+                color: white;
+                font-family: 'Orbitron', monospace;
+            `;
+            
+            overlay.innerHTML = `
+                <div style="text-align: center; padding: 40px;">
+                    <h2 style="color: #00d4ff; margin-bottom: 20px; font-size: 2rem;">🔒 FINAL LEVEL - SECURE MODE</h2>
+                    <p style="margin-bottom: 30px; font-size: 1.2rem;">Level 5 requires fullscreen mode for security.</p>
+                    <button id="enterFullscreenBtn5" style="
+                        padding: 15px 30px;
+                        background: linear-gradient(135deg, #00d4ff, #8b5cf6);
+                        border: none;
+                        border-radius: 10px;
+                        color: white;
+                        font-size: 1.1rem;
+                        font-weight: bold;
+                        cursor: pointer;
+                        font-family: 'Orbitron', monospace;
+                    ">ENTER FULLSCREEN & START FINAL LEVEL</button>
+                </div>
+            `;
+            
+            document.body.appendChild(overlay);
+            
+            // Handle fullscreen button click
+            document.getElementById('enterFullscreenBtn5').addEventListener('click', () => {
+                enterFullscreen();
+                document.body.removeChild(overlay);
+                initializeLevel();
+            });
+        }
+
+        // Initialize level after fullscreen is confirmed
+        function initializeLevel() {
+            document.getElementById('finalAnswer').focus();
+            initializeTimer();
+            updateAttemptsDisplay();
+            updateUserProgress(5, 'active'); // Update status when entering level 5
+            
+            // Force fullscreen immediately and repeatedly
+            enterFullscreen();
+            
+            // Keep trying to enter fullscreen until successful
+            const fullscreenInterval = setInterval(() => {
+                if (!document.fullscreenElement) {
+                    enterFullscreen();
+                } else {
+                    clearInterval(fullscreenInterval);
+                }
+            }, 100);
+            
+            // Clear interval after 3 seconds to avoid infinite loop
+            setTimeout(() => {
+                clearInterval(fullscreenInterval);
+            }, 3000);
+            
+            // Add comprehensive listeners to the main input field
+            const finalAnswerInput = document.getElementById('finalAnswer');
+            if (finalAnswerInput) {
+                // Multiple event types to catch all interactions
+                ['click', 'focus', 'mousedown', 'touchstart', 'input'].forEach(eventType => {
+                    finalAnswerInput.addEventListener(eventType, () => {
+                        if (!document.fullscreenElement && !challengeCompleted) {
+                            console.log(`Fullscreen triggered by ${eventType} on finalAnswer`);
+                            enterFullscreen();
+                        }
+                    });
+                });
+            }
+            
+            // Add listeners to all input elements (in case there are others)
+            const allInputs = document.querySelectorAll('input, textarea, select');
+            allInputs.forEach(input => {
+                ['click', 'focus', 'mousedown', 'touchstart'].forEach(eventType => {
+                    input.addEventListener(eventType, () => {
+                        if (!document.fullscreenElement && !challengeCompleted) {
+                            console.log(`Fullscreen triggered by ${eventType} on input`);
+                            enterFullscreen();
+                        }
+                    });
+                });
+            });
+            
+            // Add click listener to the entire document as fallback
+            document.addEventListener('click', (e) => {
+                if (!document.fullscreenElement && !challengeCompleted) {
+                    console.log('Fullscreen triggered by document click');
+                    enterFullscreen();
+                }
+            });
+        }
+
+        // Additional fullscreen enforcement on page focus
+        window.addEventListener('focus', () => {
+            if (!document.fullscreenElement && !challengeCompleted) {
+                console.log('Fullscreen triggered by window focus');
+                enterFullscreen();
+            }
+        });
+
+        // Additional fullscreen enforcement on page visibility
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && !document.fullscreenElement && !challengeCompleted) {
+                setTimeout(() => {
+                    console.log('Fullscreen triggered by visibility change');
+                    enterFullscreen();
+                }, 100);
+            }
+        });
+
+        // Re-enter fullscreen if user exits - AGGRESSIVE MODE
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement && !challengeCompleted) {
+                // Immediately re-enter fullscreen without alert
+                setTimeout(() => {
+                    enterFullscreen();
+                }, 50);
+            }
+        });
+        
+        // Add input validation and hints
+        document.getElementById('logic').addEventListener('input', function() {
+            if (this.value == 70) this.style.borderColor = 'var(--success-color)';
+        });
+        
+        document.getElementById('math').addEventListener('input', function() {
+            if (this.value == 5) this.style.borderColor = 'var(--success-color)';
+        });
+        
+        document.getElementById('pattern').addEventListener('input', function() {
+            if (this.value == 64) this.style.borderColor = 'var(--success-color)';
+        });
+        
+        document.getElementById('binary').addEventListener('input', function() {
+            if (this.value == 8) this.style.borderColor = 'var(--success-color)';
+        });
+    </script>
+</body>
+</html>

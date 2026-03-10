@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadow Pages - ITYUKTA 2K26</title>
+    <link rel="stylesheet" href="styles.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;700;900&family=Fira+Code:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <canvas id="particle-canvas"></canvas>
+        <canvas id="matrix-canvas"></canvas>
+        <div class="bg-grid"></div>
+        <div class="bg-glow"></div>
+    </div>
+
+    <!-- Page Transition Overlay -->
+    <div class="page-transition" id="page-transition">
+        <div class="transition-content">
+            <div class="transition-logo">SHADOW PAGES</div>
+            <div class="transition-loader"></div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span class="logo-text">SHADOW PAGES</span>
+            </div>
+            <div class="nav-menu">
+                <a href="#hero" class="nav-link">Home</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#timeline" class="nav-link">Levels</a>
+                <a href="#rules" class="nav-link">Rules</a>
+                <a href="#leaderboard" class="nav-link">Leaderboard</a>
+                <button class="nav-link logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero-section">
+        <div class="hero-content">
+            <div class="glitch-container">
+                <h1 class="glitch-text" data-text="SHADOW PAGES">SHADOW PAGES</h1>
+            </div>
+            <p class="hero-subtitle">ITYUKTA 2K26 Technical Event</p>
+            <div class="welcome-message" id="welcomeMessage" style="display: none;">
+                <span class="welcome-text">Welcome, <span class="participant-name-display">Participant</span>!</span>
+            </div>
+            <div class="typing-container">
+                <p class="hero-description typing-text" id="typing-text"></p>
+            </div>
+
+            <button class="cta-button" onclick="startChallenge();">
+                <span class="button-text">ENTER THE CHALLENGE</span>
+                <div class="button-glow"></div>
+            </button>
+        </div>
+
+        <!-- Floating Elements -->
+        <div class="floating-elements">
+            <div class="floating-element" style="--delay: 0s; --duration: 6s;"></div>
+            <div class="floating-element" style="--delay: 2s; --duration: 8s;"></div>
+            <div class="floating-element" style="--delay: 4s; --duration: 7s;"></div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="glitch-text section-title" data-text="ABOUT SHADOW PAGES">ABOUT SHADOW PAGES</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="about-content">
+                <div class="glass-card main-description">
+                    <p class="description">
+                        Shadow Pages is a five-level puzzle-solving competition where only the most skilled minds
+                        survive.
+                        Each participant must successfully resolve one layer of the challenge to gain access to the
+                        next.
+                        Only those who complete all five layers will qualify for the final stage.
+                    </p>
+                </div>
+                <div class="stats-grid">
+                    <div class="glass-card stat-item">
+                        <div class="stat-icon">🎯</div>
+                        <span class="stat-number">5</span>
+                        <span class="stat-label">LEVELS</span>
+                    </div>
+                    <div class="glass-card stat-item">
+                        <div class="stat-icon">👑</div>
+                        <span class="stat-number">1</span>
+                        <span class="stat-label">WINNER</span>
+                    </div>
+                    <div class="glass-card stat-item">
+                        <div class="stat-icon">🎯</div>
+                        <span class="stat-number">5</span>
+                        <span class="stat-label">ATTEMPTS</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Timeline Section -->
+    <section id="timeline" class="timeline-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="glitch-text section-title" data-text="5-LEVEL INTERACTIVE TIMELINE">5-LEVEL INTERACTIVE
+                    TIMELINE</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="interactive-timeline">
+                <div class="timeline-track"></div>
+                <div class="timeline-item active" data-level="1">
+                    <div class="timeline-marker">
+                        <span class="marker-number">01</span>
+                        <div class="marker-glow"></div>
+                    </div>
+                    <div class="glass-card timeline-content">
+                        <div class="level-icon">🧩</div>
+                        <h3>LOGIC PUZZLE</h3>
+                        <p>Test your analytical thinking with complex logical challenges</p>
+                        <div class="level-progress">
+                            <div class="progress-bar"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item" data-level="2">
+                    <div class="timeline-marker">
+                        <span class="marker-number">02</span>
+                        <div class="marker-glow"></div>
+                    </div>
+                    <div class="glass-card timeline-content">
+                        <div class="level-icon">🔐</div>
+                        <h3>CIPHER</h3>
+                        <p>Decode hidden messages using cryptographic techniques</p>
+                        <div class="level-progress">
+                            <div class="progress-bar"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item" data-level="3">
+                    <div class="timeline-marker">
+                        <span class="marker-number">03</span>
+                        <div class="marker-glow"></div>
+                    </div>
+                    <div class="glass-card timeline-content">
+                        <div class="level-icon">💻</div>
+                        <h3>CODE SNIPPET</h3>
+                        <p>Debug and solve algorithmic programming challenges</p>
+                        <div class="level-progress">
+                            <div class="progress-bar"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item" data-level="4">
+                    <div class="timeline-marker">
+                        <span class="marker-number">04</span>
+                        <div class="marker-glow"></div>
+                    </div>
+                    <div class="glass-card timeline-content">
+                        <div class="level-icon">🎭</div>
+                        <h3>RIDDLE</h3>
+                        <p>Think outside the box with creative problem solving</p>
+                        <div class="level-progress">
+                            <div class="progress-bar"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item" data-level="5">
+                    <div class="timeline-marker">
+                        <span class="marker-number">05</span>
+                        <div class="marker-glow"></div>
+                    </div>
+                    <div class="glass-card timeline-content">
+                        <div class="level-icon">🧠</div>
+                        <h3>FINAL BRAIN CHALLENGE</h3>
+                        <p>The ultimate test combining all previous skills</p>
+                        <div class="level-progress">
+                            <div class="progress-bar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rules Section -->
+    <section id="rules" class="rules-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="glitch-text section-title" data-text="RULES OF ENGAGEMENT">RULES OF ENGAGEMENT</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="rules-grid">
+                <div class="glass-card rule-item">
+                    <div class="rule-icon">⚡</div>
+                    <h3>NO SKIPPING</h3>
+                    <p>Each level must be completed sequentially. No shortcuts allowed.</p>
+                    <div class="rule-accent"></div>
+                </div>
+                <div class="glass-card rule-item">
+                    <div class="rule-icon">⏱️</div>
+                    <h3>TIME-BASED WINNER</h3>
+                    <p>The fastest participant to complete all levels claims victory.</p>
+                    <div class="rule-accent"></div>
+                </div>
+                <div class="glass-card rule-item">
+                    <div class="rule-icon">🔒</div>
+                    <h3>STRICT PROGRESSION</h3>
+                    <p>Access to next level granted only upon successful completion.</p>
+                    <div class="rule-accent"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Animated Level Cards Section -->
+    <section id="levels" class="levels-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="glitch-text section-title" data-text="CHALLENGE LEVELS">CHALLENGE LEVELS</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="levels-grid">
+                <div class="glass-card level-card" data-level="1">
+                    <div class="card-glow"></div>
+                    <div class="level-number">01</div>
+                    <div class="level-icon">🧩</div>
+                    <h3>LOGIC PUZZLE</h3>
+                    <p>Test your analytical thinking</p>
+                    <div class="card-footer">
+                        <span class="difficulty">Difficulty: Medium</span>
+                        <div class="card-arrow">→</div>
+                    </div>
+                </div>
+                <div class="glass-card level-card" data-level="2">
+                    <div class="card-glow"></div>
+                    <div class="level-number">02</div>
+                    <div class="level-icon">🔐</div>
+                    <h3>CIPHER</h3>
+                    <p>Decode the hidden message</p>
+                    <div class="card-footer">
+                        <span class="difficulty">Difficulty: Hard</span>
+                        <div class="card-arrow">→</div>
+                    </div>
+                </div>
+                <div class="glass-card level-card" data-level="3">
+                    <div class="card-glow"></div>
+                    <div class="level-number">03</div>
+                    <div class="level-icon">💻</div>
+                    <h3>CODE SNIPPET</h3>
+                    <p>Debug and solve the algorithm</p>
+                    <div class="card-footer">
+                        <span class="difficulty">Difficulty: Expert</span>
+                        <div class="card-arrow">→</div>
+                    </div>
+                </div>
+                <div class="glass-card level-card" data-level="4">
+                    <div class="card-glow"></div>
+                    <div class="level-number">04</div>
+                    <div class="level-icon">🎭</div>
+                    <h3>RIDDLE</h3>
+                    <p>Think outside the box</p>
+                    <div class="card-footer">
+                        <span class="difficulty">Difficulty: Extreme</span>
+                        <div class="card-arrow">→</div>
+                    </div>
+                </div>
+                <div class="glass-card level-card" data-level="5">
+                    <div class="card-glow"></div>
+                    <div class="level-number">05</div>
+                    <div class="level-icon">🧠</div>
+                    <h3>FINAL BRAIN CHALLENGE</h3>
+                    <p>The ultimate test awaits</p>
+                    <div class="card-footer">
+                        <span class="difficulty">Difficulty: Legendary</span>
+                        <div class="card-arrow">→</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Leaderboard Section -->
+    <section id="leaderboard" class="leaderboard-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="glitch-text section-title" data-text="LIVE LEADERBOARD">LIVE LEADERBOARD</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="leaderboard-container">
+                <div class="glass-card leaderboard-card">
+                    <div class="leaderboard-header">
+                        <div class="rank-col">RANK</div>
+                        <div class="name-col">PARTICIPANT</div>
+                        <div class="level-col">LEVEL</div>
+                        <div class="time-col">TIME</div>
+                        <div class="status-col">STATUS</div>
+                    </div>
+                    <div class="leaderboard-body" id="leaderboard-body">
+                        <!-- Dynamic leaderboard entries will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3 class="glitch-text" data-text="ITYUKTA 2K26">ITYUKTA 2K26</h3>
+                    <p>Technical Excellence. Innovation. Competition.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-section">
+                        <h4>Event</h4>
+                        <a href="#about">About</a>
+                        <a href="#timeline">Timeline</a>
+                        <a href="#rules">Rules</a>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Connect</h4>
+                        <a href="#">Discord</a>
+                        <a href="#">Instagram</a>
+                        <a href="#">LinkedIn</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 ITYUKTA. All rights reserved. | Shadow Pages Challenge</p>
+                <div class="footer-glow"></div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Particles -->
+    <div class="floating-particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <script src="script-fixed.js"></script>
+    <script src="leaderboard-fix.js"></script>
+    
+    <script>
+        // Authentication check after DOM loads
+        document.addEventListener('DOMContentLoaded', function() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const participantName = localStorage.getItem('participantName');
+            
+            console.log('Checking authentication:', { isLoggedIn, participantName });
+            
+            // If user is not logged in, redirect to login page
+            if (isLoggedIn !== 'true' || !participantName) {
+                console.log('User not authenticated, redirecting to login...');
+                setTimeout(() => {
+                    window.location.replace('login2.html');
+                }, 100);
+                return;
+            }
+            
+            console.log('User authenticated:', participantName);
+            
+            // Show welcome message and update participant name
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            const participantDisplays = document.querySelectorAll('.participant-name-display');
+            
+            if (welcomeMessage) {
+                welcomeMessage.style.display = 'block';
+                console.log('Welcome message displayed');
+            }
+            
+            participantDisplays.forEach(element => {
+                element.textContent = participantName;
+            });
+            
+            // Show the main content
+            document.body.style.visibility = 'visible';
+            document.body.style.opacity = '1';
+        });
+        
+        // Enhanced startChallenge function with proper authentication
+        function startChallenge() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const participantName = localStorage.getItem('participantName');
+            
+            // Triple-check authentication before starting challenge
+            if (isLoggedIn !== 'true' || !participantName) {
+                alert('Authentication required! Redirecting to login...');
+                window.location.replace('login2.html');
+                return;
+            }
+            
+            // Initialize challenge start time
+            const startTime = Date.now();
+            localStorage.setItem('challengeStartTime', startTime.toString());
+            localStorage.setItem('challengeStatus', 'active');
+            
+            // Reset attempts counter for new challenge - THIS IS THE FIX
+            localStorage.removeItem('totalAttempts');
+            
+            console.log('Starting challenge for:', participantName);
+            
+            // Initialize user in leaderboard
+            try {
+                initializeUserInLeaderboard(participantName, startTime);
+                console.log('User initialized in leaderboard successfully');
+            } catch (error) {
+                console.error('Error initializing user in leaderboard:', error);
+            }
+            
+            // Redirect to level 1
+            window.location.href = 'level1.html';
+        }
+        
+        // Add logout functionality
+        function logout() {
+            // Clear all authentication data
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('participantName');
+            localStorage.removeItem('loginTime');
+            localStorage.removeItem('challengeStartTime');
+            localStorage.removeItem('leaderboardData');
+            localStorage.removeItem('shadowPagesLeaderboard');
+            
+            console.log('User logged out, clearing session data');
+            alert('Logged out successfully!');
+            window.location.replace('login2.html');
+        }
+        
+        // Make functions globally available
+        window.startChallenge = startChallenge;
+        window.logout = logout;
+    </script>
+    
+    <style>
+        /* Initially hide content until authentication check */
+        body {
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+    </style>
+</body>
+
+</html>

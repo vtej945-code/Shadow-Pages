@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 2 - Cipher Challenge | Shadow Pages</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;700;900&family=Fira+Code:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-bg: #0a0a0f;
+            --secondary-bg: #1a1a2e;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --neon-blue: #00d4ff;
+            --neon-purple: #8b5cf6;
+            --neon-pink: #f472b6;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --success-color: #00ff00;
+            --gradient-primary: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+        }
+
+        body {
+            font-family: 'Orbitron', monospace;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .level-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .level-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 900;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .level-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .level-info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .info-item {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 15px 25px;
+            text-align: center;
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            color: var(--neon-blue);
+            font-weight: 700;
+        }
+
+        .question-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 25px 50px rgba(0, 212, 255, 0.1);
+        }
+
+        .question-title {
+            font-size: 1.5rem;
+            color: var(--neon-blue);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: var(--text-secondary);
+        }
+
+        .cipher-text {
+            font-family: 'Fira Code', monospace;
+            font-size: 1.5rem;
+            text-align: center;
+            color: var(--text-primary);
+            background: rgba(0, 212, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            letter-spacing: 3px;
+            word-break: break-all;
+        }
+
+        .answer-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .answer-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid var(--glass-border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            font-family: 'Fira Code', monospace;
+            text-align: center;
+            margin: 20px 10px;
+            transition: all 0.3s ease;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .submit-btn {
+            background: var(--glass-bg);
+            border: 2px solid var(--neon-blue);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: 'Orbitron', monospace;
+            padding: 15px 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            margin: 20px 10px;
+        }
+
+        .submit-btn:hover {
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .result-message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .result-message.success {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .result-message.error {
+            background: rgba(255, 0, 64, 0.1);
+            border: 1px solid #ff0040;
+            color: #ff0040;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            padding: 10px 20px;
+            text-decoration: none;
+            font-family: 'Orbitron', monospace;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 10px;
+            }
+            
+            .question-container, .answer-section {
+                padding: 20px;
+            }
+            
+            .level-info {
+                gap: 15px;
+            }
+            
+            .cipher-text {
+                font-size: 1.2rem;
+                letter-spacing: 2px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+    
+    <a href="level1.html" class="back-btn">← Back to Level 1</a>
+    
+    <div class="container">
+        <div class="level-header">
+            <h1 class="level-title">LEVEL 2</h1>
+            <p class="level-subtitle">Cipher Challenge</p>
+        </div>
+        
+        <div class="level-info">
+            <div class="info-item">
+                <div class="info-label">Difficulty</div>
+                <div class="info-value">Hard</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Points</div>
+                <div class="info-value">200</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Total Time</div>
+                <div class="info-value" id="totalTimer">00:00:00</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Attempts Left</div>
+                <div class="info-value" id="attemptsLeft">5</div>
+            </div>
+        </div>
+        
+        <div class="question-container">
+            <h2 class="question-title">🔐 Cipher Challenge</h2>
+            <p class="question-text">
+                Decode this message. Each letter is shifted forward by 1 position in the alphabet.
+            </p>
+            
+            <div class="cipher-text">
+                Uifsf jt b tfdsfu lfz
+            </div>
+            
+            <p class="question-text">
+                <strong>Hint:</strong> Each letter is shifted forward by 1. A becomes B, B becomes C, and so on.
+            </p>
+        </div>
+        
+        <div class="answer-section">
+            <h3 style="color: var(--neon-blue); margin-bottom: 20px;">Enter the Decrypted Message</h3>
+            <div>
+                <input type="text" class="answer-input" id="answer" placeholder="Enter decrypted message..." maxlength="50" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+            </div>
+            <button class="submit-btn" onclick="checkAnswer()">Submit Answer</button>
+            <div class="result-message" id="resultMessage"></div>
+        </div>
+    </div>
+
+    <script>
+        // Correct answer: "THERE IS A SECRET KEY"
+        // Caesar cipher with shift of 1: U->T, I->H, F->E, etc.
+        
+        function checkAnswer() {
+            const answer = document.getElementById('answer').value.trim().toUpperCase();
+            const resultMessage = document.getElementById('resultMessage');
+            
+            if (!answer) {
+                showResult('Please enter your answer!', 'error');
+                return;
+            }
+            
+            // Check global attempt limit across all levels
+            let totalAttempts = parseInt(localStorage.getItem('totalAttempts') || '0');
+            if (totalAttempts >= 5) {
+                showResult('❌ Game Over! You have exceeded the maximum of 5 attempts across all levels.', 'error');
+                setTimeout(() => {
+                    alert('Challenge failed! You used all 5 attempts across all levels. Redirecting to home page.');
+                    localStorage.removeItem('totalAttempts');
+                    localStorage.removeItem('challengeStartTime');
+                    window.location.href = 'index.html';
+                }, 2000);
+                return;
+            }
+            
+            if (answer === 'THERE IS A SECRET KEY') {
+                // Disable tab monitoring since challenge is completed
+                challengeCompleted = true;
+                
+                // Update user progress in leaderboard
+                updateUserProgress(2, 'completed');
+                
+                showResult('🎉 Excellent! You successfully decrypted the cipher! Proceeding to Level 3...', 'success');
+                setTimeout(() => {
+                    window.location.href = 'level3.html';
+                }, 2000);
+            } else {
+                // Increment global attempt counter
+                totalAttempts++;
+                localStorage.setItem('totalAttempts', totalAttempts.toString());
+                const remaining = 5 - totalAttempts;
+                
+                if (remaining > 0) {
+                    showResult(`❌ Incorrect. Remember to shift each letter back by 1 position. ${remaining} attempts remaining across all levels!`, 'error');
+                    updateAttemptsDisplay();
+                } else {
+                    // Show correct answer when limit exceeded
+                    showResult('❌ Game Over! You have used all 5 attempts across all levels. The correct answer was: "THERE IS A SECRET KEY" (Caesar cipher with shift -1)', 'error');
+                    
+                    // Update user status to failed and set challenge status
+                    updateUserProgress(2, 'failed');
+                    localStorage.setItem('challengeStatus', 'failed');
+                    
+                    // Disable input and button
+                    document.getElementById('answer').disabled = true;
+                    document.querySelector('.submit-btn').disabled = true;
+                    document.querySelector('.submit-btn').style.opacity = '0.5';
+                    document.querySelector('.submit-btn').style.cursor = 'not-allowed';
+                    
+                    setTimeout(() => {
+                        alert('Challenge failed! You used all 5 attempts across all levels. The correct answer was "THERE IS A SECRET KEY". Redirecting to home page.');
+                        localStorage.removeItem('totalAttempts');
+                        localStorage.removeItem('challengeStartTime');
+                        window.location.href = 'index.html';
+                    }, 5000);
+                }
+            }
+        }
+        
+        // Function to update user progress in leaderboard
+        function updateUserProgress(level, status) {
+            // Get participant name
+            const participantName = localStorage.getItem('participantName') || 'Anonymous';
+            
+            // Get challenge start time
+            const challengeStartTime = parseInt(localStorage.getItem('challengeStartTime'));
+            if (!challengeStartTime) {
+                console.error('No challenge start time found');
+                return;
+            }
+            
+            const currentTime = Date.now();
+            
+            // Get existing leaderboard data
+            let leaderboardData = JSON.parse(localStorage.getItem('leaderboardData') || '[]');
+            
+            // Find existing user entry
+            let userEntry = leaderboardData.find(entry => entry.name === participantName);
+            
+            if (!userEntry) {
+                // Create new entry
+                userEntry = {
+                    name: participantName,
+                    level: 1,
+                    status: 'active',
+                    startTime: challengeStartTime,
+                    timestamp: currentTime,
+                    completedLevel: 0
+                };
+                leaderboardData.push(userEntry);
+            }
+            
+            // Update user data based on status
+            if (status === 'completed') {
+                // User completed this level, move to next level
+                userEntry.completedLevel = level;
+                userEntry.level = level + 1; // Next level they'll work on
+                userEntry.status = level === 5 ? 'completed' : 'active'; // If completed level 5, mark as finished
+                userEntry.timestamp = currentTime;
+                
+                // If completed all 5 levels, record finish time
+                if (level === 5) {
+                    userEntry.finishTime = currentTime;
+                    userEntry.totalTime = currentTime - challengeStartTime;
+                }
+            } else if (status === 'failed') {
+                // User failed/lost the challenge
+                userEntry.status = 'failed';
+                userEntry.timestamp = currentTime;
+                userEntry.totalTime = currentTime - challengeStartTime;
+            } else if (status === 'active') {
+                // User is actively working on this level
+                userEntry.level = level;
+                userEntry.status = 'active';
+                userEntry.timestamp = currentTime;
+            }
+            
+            // Update the leaderboard data
+            const existingIndex = leaderboardData.findIndex(entry => entry.name === participantName);
+            if (existingIndex !== -1) {
+                leaderboardData[existingIndex] = userEntry;
+            }
+            
+            // Save updated leaderboard
+            localStorage.setItem('leaderboardData', JSON.stringify(leaderboardData));
+            
+            console.log(`Updated user progress: ${participantName} - Level ${level} - Status: ${status}`);
+        }
+        
+        function showResult(message, type) {
+            const resultMessage = document.getElementById('resultMessage');
+            resultMessage.textContent = message;
+            resultMessage.className = `result-message ${type}`;
+            resultMessage.style.display = 'block';
+            
+            setTimeout(() => {
+                if (type === 'error') {
+                    resultMessage.style.display = 'none';
+                }
+            }, 3000);
+        }
+        
+        // Allow Enter key to submit
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+        
+        // Timer functionality
+        let startTime = null;
+        let timerInterval = null;
+        
+        function initializeTimer() {
+            // Get the challenge start time from localStorage
+            const challengeStartTime = localStorage.getItem('challengeStartTime');
+            
+            if (challengeStartTime) {
+                startTime = parseInt(challengeStartTime);
+                // Start the timer display
+                updateTimer();
+                timerInterval = setInterval(updateTimer, 1000);
+            }
+        }
+        
+        function updateTimer() {
+            const currentTime = new Date().getTime();
+            const elapsedTime = currentTime - startTime;
+            
+            const hours = Math.floor(elapsedTime / (1000 * 60 * 60));
+            const minutes = Math.floor((elapsedTime % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((elapsedTime % (1000 * 60)) / 1000);
+            
+            const formattedTime = 
+                String(hours).padStart(2, '0') + ':' +
+                String(minutes).padStart(2, '0') + ':' +
+                String(seconds).padStart(2, '0');
+            
+            document.getElementById('totalTimer').textContent = formattedTime;
+        }
+        
+        // Update attempts display
+        function updateAttemptsDisplay() {
+            const attempts = parseInt(localStorage.getItem('totalAttempts') || '0');
+            const remaining = 5 - attempts;
+            document.getElementById('attemptsLeft').textContent = remaining;
+            if (remaining <= 2) {
+                document.getElementById('attemptsLeft').style.color = '#ff0040';
+            }
+        }
+        
+        // Fullscreen and tab monitoring
+        let challengeCompleted = false; // Flag to disable monitoring when challenge is completed
+        
+        function enterFullscreen() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+        }
+
+        // Monitor tab switching and visibility - IMMEDIATE TERMINATION
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && !challengeCompleted) {
+                // Stop the timer
+                clearInterval(window.timerInterval);
+                
+                // Get elapsed time
+                const startTime = parseInt(localStorage.getItem('challengeStartTime'));
+                const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+                const minutes = Math.floor(elapsedTime / 60);
+                const seconds = elapsedTime % 60;
+                
+                // Show correct answer
+                const correctAnswer = 'THERE IS A SECRET KEY (Caesar cipher with shift -1)';
+                
+                alert(`⚠️ CHALLENGE TERMINATED!\n\nYou switched tabs/browsers during the challenge.\n\nCorrect Answer for Level 2:\n${correctAnswer}\n\nYour Time: ${minutes}m ${seconds}s\n\nRedirecting to home page...`);
+                
+                // Update user status to failed
+                updateUserProgress(2, 'failed');
+                localStorage.setItem('challengeStatus', 'failed');
+                localStorage.removeItem('totalAttempts');
+                localStorage.removeItem('tabSwitchCount');
+                
+                // Redirect to home page
+                window.location.href = 'index.html';
+            }
+        });
+
+        // Prevent right-click and common shortcuts
+        document.addEventListener('contextmenu', (e) => e.preventDefault());
+        document.addEventListener('keydown', (e) => {
+            // Prevent F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, and ESC
+            if (e.key === 'F12' || 
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) ||
+                (e.ctrlKey && e.key === 'u') ||
+                e.key === 'Escape') {
+                e.preventDefault();
+                if (e.key === 'Escape') {
+                    alert('Fullscreen mode is locked during the challenge for security.');
+                    // Force back to fullscreen if user somehow exits
+                    setTimeout(() => {
+                        if (!document.fullscreenElement) {
+                            enterFullscreen();
+                        }
+                    }, 100);
+                } else {
+                    alert('Developer tools are disabled during the challenge.');
+                }
+            }
+        });
+        
+        // Auto-focus input and initialize timer
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('answer').focus();
+            initializeTimer();
+            updateAttemptsDisplay();
+            updateUserProgress(2, 'active'); // Update status when entering level 2
+            
+            // Force fullscreen immediately and repeatedly
+            enterFullscreen();
+            
+            // Keep trying to enter fullscreen until successful
+            const fullscreenInterval = setInterval(() => {
+                if (!document.fullscreenElement) {
+                    enterFullscreen();
+                } else {
+                    clearInterval(fullscreenInterval);
+                }
+            }, 100);
+            
+            // Clear interval after 3 seconds to avoid infinite loop
+            setTimeout(() => {
+                clearInterval(fullscreenInterval);
+            }, 3000);
+            
+            // Add click listener to input field to trigger fullscreen
+            document.getElementById('answer').addEventListener('click', () => {
+                if (!document.fullscreenElement && !challengeCompleted) {
+                    enterFullscreen();
+                }
+            });
+            
+            // Add focus listener to input field to trigger fullscreen
+            document.getElementById('answer').addEventListener('focus', () => {
+                if (!document.fullscreenElement && !challengeCompleted) {
+                    enterFullscreen();
+                }
+            });
+        });
+
+        // Additional fullscreen enforcement on page focus
+        window.addEventListener('focus', () => {
+            if (!document.fullscreenElement && !challengeCompleted) {
+                enterFullscreen();
+            }
+        });
+
+        // Additional fullscreen enforcement on page visibility
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && !document.fullscreenElement && !challengeCompleted) {
+                setTimeout(() => {
+                    enterFullscreen();
+                }, 100);
+            }
+        });
+
+        // Re-enter fullscreen if user exits - AGGRESSIVE MODE
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement && !challengeCompleted) {
+                // Immediately re-enter fullscreen without alert
+                setTimeout(() => {
+                    enterFullscreen();
+                }, 50);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Leaderboard - Shadow Pages</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;700;900&family=Fira+Code:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-bg: #0a0a0f;
+            --secondary-bg: #1a1a2e;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --neon-blue: #00d4ff;
+            --neon-purple: #8b5cf6;
+            --neon-pink: #f472b6;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --success-color: #00ff00;
+            --error-color: #ff0040;
+            --gradient-primary: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+        }
+
+        body {
+            font-family: 'Orbitron', monospace;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-title {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 900;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            0% { filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5)); }
+            100% { filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.8)); }
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            padding: 12px 20px;
+            text-decoration: none;
+            font-family: 'Orbitron', monospace;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(20px);
+        }
+
+        .back-btn:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .leaderboard-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 25px 50px rgba(0, 212, 255, 0.1);
+        }
+
+        .leaderboard-header {
+            display: grid;
+            grid-template-columns: 80px 1fr 120px 120px 120px;
+            gap: 20px;
+            padding: 20px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--neon-blue);
+        }
+
+        .leaderboard-body {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .leaderboard-entry {
+            display: grid;
+            grid-template-columns: 80px 1fr 120px 120px 120px;
+            gap: 20px;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .leaderboard-entry:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .rank {
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .rank.first {
+            color: #ffd700;
+        }
+
+        .rank.second {
+            color: #c0c0c0;
+        }
+
+        .rank.third {
+            color: #cd7f32;
+        }
+
+        .participant-name {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            color: var(--text-primary);
+        }
+
+        .level-progress {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--neon-purple);
+        }
+
+        .completion-time {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Fira Code', monospace;
+            color: var(--text-secondary);
+        }
+
+        .participant-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            color: var(--neon-blue);
+        }
+
+        .status-completed {
+            color: var(--success-color);
+        }
+
+        .status-failed {
+            color: var(--error-color);
+        }
+
+        .new-entry {
+            animation: newEntryGlow 2s ease-in-out;
+        }
+
+        @keyframes newEntryGlow {
+            0%, 100% { box-shadow: 0 5px 15px rgba(0, 212, 255, 0.2); }
+            50% { box-shadow: 0 5px 25px rgba(0, 212, 255, 0.5); }
+        }
+
+        .refresh-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 10px 15px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            backdrop-filter: blur(20px);
+        }
+
+        .refresh-indicator.updating {
+            border-color: var(--neon-blue);
+            color: var(--neon-blue);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .leaderboard-header,
+            .leaderboard-entry {
+                grid-template-columns: 60px 1fr 80px 80px 100px;
+                gap: 10px;
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+
+            .container {
+                padding: 20px 10px;
+            }
+
+            .leaderboard-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+    
+    <a href="index.html" class="back-btn">← Back to Home</a>
+    
+    <div class="refresh-indicator" id="refreshIndicator">
+        🔄 Auto-refresh: ON
+    </div>
+    
+    <div class="container">
+        <div class="header">
+            <h1 class="page-title">LIVE LEADERBOARD</h1>
+            <p class="page-subtitle">Real-time participant progress and rankings</p>
+        </div>
+        
+        <div class="leaderboard-container">
+            <div class="leaderboard-header">
+                <div>RANK</div>
+                <div>PARTICIPANT</div>
+                <div>LEVEL</div>
+                <div>TIME</div>
+                <div>STATUS</div>
+            </div>
+            <div class="leaderboard-body" id="leaderboardBody">
+                <!-- Dynamic leaderboard entries will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class LiveLeaderboard {
+            constructor() {
+                this.leaderboardBody = document.getElementById('leaderboardBody');
+                this.refreshIndicator = document.getElementById('refreshIndicator');
+                this.participants = [];
+                
+                this.init();
+                this.startAutoRefresh();
+            }
+            
+            init() {
+                this.loadLeaderboardData();
+                this.renderLeaderboard();
+            }
+            
+            loadLeaderboardData() {
+                // Get real leaderboard data from localStorage
+                const realData = JSON.parse(localStorage.getItem('leaderboardData') || '[]');
+                
+                // Add some demo data if no real data exists
+                let demoData = [];
+                if (realData.length === 0) {
+                    const currentTime = Date.now();
+                    demoData = [
+                        { 
+                            name: 'CyberNinja', 
+                            level: 5, 
+                            status: 'completed', 
+                            timestamp: currentTime - 1000000,
+                            startTime: currentTime - 1754000, // Started 29:14 ago
+                            totalTime: 1754000 // 29 minutes 14 seconds total
+                        },
+                        { 
+                            name: 'CodeMaster', 
+                            level: 4, 
+                            status: 'active', 
+                            timestamp: currentTime - 800000,
+                            startTime: currentTime - 1322000, // Started 22:02 ago
+                            totalTime: 1322000 // 22 minutes 2 seconds total
+                        },
+                        { 
+                            name: 'HackWizard', 
+                            level: 4, 
+                            status: 'active', 
+                            timestamp: currentTime - 700000,
+                            startTime: currentTime - 1605000, // Started 26:45 ago
+                            totalTime: 1605000 // 26 minutes 45 seconds total
+                        },
+                        { 
+                            name: 'DataGhost', 
+                            level: 3, 
+                            status: 'active', 
+                            timestamp: currentTime - 600000,
+                            startTime: currentTime - 1092000, // Started 18:12 ago
+                            totalTime: 1092000 // 18 minutes 12 seconds total
+                        },
+                        { 
+                            name: 'ByteHunter', 
+                            level: 3, 
+                            status: 'failed', 
+                            timestamp: currentTime - 500000,
+                            startTime: currentTime - 1173000, // Started 19:33 ago
+                            totalTime: 1173000 // 19 minutes 33 seconds total
+                        },
+                        { 
+                            name: 'PixelWarrior', 
+                            level: 2, 
+                            status: 'active', 
+                            timestamp: currentTime - 400000,
+                            startTime: currentTime - 1305000, // Started 21:45 ago
+                            totalTime: 1305000 // 21 minutes 45 seconds total
+                        },
+                        { 
+                            name: 'LogicBeast', 
+                            level: 2, 
+                            status: 'active', 
+                            timestamp: currentTime - 300000,
+                            startTime: currentTime - 1392000, // Started 23:12 ago
+                            totalTime: 1392000 // 23 minutes 12 seconds total
+                        },
+                        { 
+                            name: 'AlgoKnight', 
+                            level: 1, 
+                            status: 'active', 
+                            timestamp: currentTime - 200000,
+                            startTime: currentTime - 1534000, // Started 25:34 ago
+                            totalTime: 1534000 // 25 minutes 34 seconds total
+                        }
+                    ];
+                }
+                
+                // Combine real and demo data, prioritizing real data
+                this.participants = [...realData, ...demoData];
+                
+                // Remove duplicates (prioritize real data)
+                const uniqueParticipants = [];
+                const seenNames = new Set();
+                
+                for (const participant of this.participants) {
+                    if (!seenNames.has(participant.name)) {
+                        // Ensure every participant has proper timing data
+                        const currentTime = Date.now();
+                        
+                        // Fix missing or invalid startTime
+                        if (!participant.startTime || participant.startTime <= 0) {
+                            // If no startTime, estimate based on totalTime or use current time
+                            if (participant.totalTime && participant.totalTime > 0) {
+                                participant.startTime = currentTime - participant.totalTime;
+                            } else {
+                                participant.startTime = currentTime - 60000; // Default to 1 minute ago
+                            }
+                        }
+                        
+                        // Calculate current elapsed time for each participant
+                        let elapsedTime;
+                        if (participant.status === 'completed' && participant.totalTime) {
+                            // For completed participants, use their final completion time
+                            elapsedTime = participant.totalTime;
+                        } else if (participant.status === 'failed' && participant.totalTime) {
+                            // For failed participants, use time when they failed
+                            elapsedTime = participant.totalTime;
+                        } else {
+                            // For active participants, calculate current elapsed time
+                            elapsedTime = currentTime - participant.startTime;
+                        }
+                        
+                        // Ensure elapsedTime is never negative or zero
+                        if (elapsedTime <= 0) {
+                            elapsedTime = 60000; // Default to 1 minute
+                        }
+                        
+                        // Fix level progress display based on status
+                        if (participant.status === 'completed') {
+                            // If completed, they finished all 5 levels
+                            participant.levelProgress = '5/5';
+                        } else if (participant.status === 'failed') {
+                            // If failed, show the level they were on when they failed
+                            participant.levelProgress = `${participant.level}/5`;
+                        } else if (participant.status === 'active') {
+                            // If active, show current level they're working on
+                            participant.levelProgress = `${participant.level}/5`;
+                        } else {
+                            // Default fallback
+                            participant.levelProgress = `${participant.level || 1}/5`;
+                        }
+                        
+                        // Format time as MM:SS
+                        participant.time = this.formatElapsedTime(elapsedTime);
+                        participant.elapsedTime = elapsedTime;
+                        participant.totalTime = elapsedTime; // Update totalTime for consistency
+                        
+                        uniqueParticipants.push(participant);
+                        seenNames.add(participant.name);
+                    }
+                }
+                
+                this.participants = uniqueParticipants;
+                
+                // Sort by completion status and progress
+                this.participants.sort((a, b) => {
+                    // Completed participants first
+                    if (a.status === 'completed' && b.status !== 'completed') return -1;
+                    if (a.status !== 'completed' && b.status === 'completed') return 1;
+                    
+                    // Among completed participants, sort by completion time (fastest first)
+                    if (a.status === 'completed' && b.status === 'completed') {
+                        return (a.totalTime || a.elapsedTime) - (b.totalTime || b.elapsedTime);
+                    }
+                    
+                    // Among non-completed, sort by level progress (highest level first)
+                    if (a.level !== b.level) return b.level - a.level;
+                    
+                    // If same level, sort by elapsed time (fastest first)
+                    return (a.elapsedTime || 0) - (b.elapsedTime || 0);
+                });
+            }
+            
+            formatElapsedTime(milliseconds) {
+                const totalSeconds = Math.floor(milliseconds / 1000);
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                
+                // Always show MM:SS format for consistency
+                return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+            
+            renderLeaderboard() {
+                if (!this.leaderboardBody) return;
+                
+                if (this.participants.length === 0) {
+                    this.leaderboardBody.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🏆</div>
+                            <h3>No participants yet</h3>
+                            <p>Be the first to take on the Shadow Pages challenge!</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                this.leaderboardBody.innerHTML = '';
+                
+                this.participants.forEach((participant, index) => {
+                    const entry = document.createElement('div');
+                    entry.className = 'leaderboard-entry';
+                    entry.style.animationDelay = `${index * 0.1}s`;
+                    
+                    // Add new entry animation for recently added participants
+                    if (participant.isNew) {
+                        entry.classList.add('new-entry');
+                        setTimeout(() => {
+                            entry.classList.remove('new-entry');
+                            participant.isNew = false;
+                        }, 2000);
+                    }
+                    
+                    const rankClass = index === 0 ? 'first' : index === 1 ? 'second' : index === 2 ? 'third' : '';
+                    const statusClass = `status-${participant.status}`;
+                    
+                    entry.innerHTML = `
+                        <div class="rank ${rankClass}">#${index + 1}</div>
+                        <div class="participant-name">${participant.name}</div>
+                        <div class="level-progress">${participant.levelProgress}</div>
+                        <div class="completion-time">${participant.time}</div>
+                        <div class="participant-status ${statusClass}">
+                            ${participant.status.toUpperCase()}
+                        </div>
+                    `;
+                    
+                    this.leaderboardBody.appendChild(entry);
+                });
+            }
+            
+            startAutoRefresh() {
+                // Update timer display every second for real-time elapsed time
+                setInterval(() => {
+                    this.updateTimerDisplay();
+                }, 1000);
+                
+                // Refresh data every 5 seconds
+                setInterval(() => {
+                    this.refreshIndicator.classList.add('updating');
+                    
+                    const previousCount = this.participants.length;
+                    this.loadLeaderboardData();
+                    
+                    // Mark new entries
+                    if (this.participants.length > previousCount) {
+                        const newEntries = this.participants.slice(0, this.participants.length - previousCount);
+                        newEntries.forEach(entry => entry.isNew = true);
+                    }
+                    
+                    this.renderLeaderboard();
+                    
+                    setTimeout(() => {
+                        this.refreshIndicator.classList.remove('updating');
+                    }, 500);
+                }, 5000); // Refresh data every 5 seconds
+            }
+            
+            updateTimerDisplay() {
+                // Update elapsed time for all participants without full re-render
+                const timeElements = document.querySelectorAll('.completion-time');
+                const currentTime = Date.now();
+                
+                timeElements.forEach((element, index) => {
+                    const participant = this.participants[index];
+                    if (participant && participant.startTime) {
+                        // Update timer for active participants (not completed or failed)
+                        if (participant.status === 'active') {
+                            const elapsedTime = currentTime - participant.startTime;
+                            const formattedTime = this.formatElapsedTime(elapsedTime);
+                            element.textContent = formattedTime;
+                            
+                            // Also update the participant object for consistency
+                            participant.time = formattedTime;
+                            participant.elapsedTime = elapsedTime;
+                        }
+                        // For completed participants, show their final completion time
+                        else if (participant.status === 'completed' && participant.totalTime) {
+                            element.textContent = this.formatElapsedTime(participant.totalTime);
+                        }
+                        // For failed participants, show time when they failed
+                        else if (participant.status === 'failed' && participant.totalTime) {
+                            element.textContent = this.formatElapsedTime(participant.totalTime);
+                        }
+                    }
+                });
+            }
+        }
+        
+        // Initialize leaderboard when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new LiveLeaderboard();
+        });
+    </script>
+</body>
+</html>

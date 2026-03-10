@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Test - Shadow Pages</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #0a0a0f;
+            color: #ffffff;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 10px;
+        }
+        .success { color: #00ff00; }
+        .error { color: #ff0040; }
+        .info { color: #00d4ff; }
+        .warning { color: #f472b6; }
+        button {
+            background: linear-gradient(135deg, #00d4ff, #8b5cf6);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: bold;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+        }
+        .code {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1 class="info">🧪 Shadow Pages Login System Test</h1>
+        
+        <div class="test-section">
+            <h2 class="success">✅ FIXES IMPLEMENTED</h2>
+            <ul>
+                <li class="success">✅ Password fixed to: <strong>"ITYUKTA 2K26"</strong></li>
+                <li class="success">✅ Home page display issue resolved</li>
+                <li class="success">✅ Authentication flow optimized</li>
+                <li class="success">✅ Welcome message functionality added</li>
+                <li class="success">✅ Password hint added to login form</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h2 class="info">🔐 LOGIN CREDENTIALS</h2>
+            <div class="code">
+                <strong>Username:</strong> Any username (minimum 3 characters)<br>
+                <strong>Password:</strong> ITYUKTA 2K26
+            </div>
+            <p class="warning">⚠️ The password is case-sensitive and must be exactly: <strong>"ITYUKTA 2K26"</strong></p>
+        </div>
+
+        <div class="test-section">
+            <h2 class="info">🚀 TESTING STEPS</h2>
+            <ol>
+                <li>Click "Go to Login Page" below</li>
+                <li>Enter any username (3+ characters)</li>
+                <li>Enter password: <strong>ITYUKTA 2K26</strong></li>
+                <li>Click "ACCESS SHADOW PAGES"</li>
+                <li>Verify redirect to home page with welcome message</li>
+                <li>Test logout functionality</li>
+            </ol>
+        </div>
+
+        <div class="test-section">
+            <h2 class="info">🔧 AUTHENTICATION FLOW</h2>
+            <div class="code">
+                login2.html → Authentication → index.html → Challenge Levels
+            </div>
+            <p>The system now:</p>
+            <ul>
+                <li>✅ Requires specific password "ITYUKTA 2K26"</li>
+                <li>✅ Shows helpful password hint</li>
+                <li>✅ Displays home page properly after login</li>
+                <li>✅ Shows personalized welcome message</li>
+                <li>✅ Maintains session until logout</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h2 class="success">🎯 QUICK ACTIONS</h2>
+            <button onclick="window.location.href='login2.html'">Go to Login Page</button>
+            <button onclick="clearSession()">Clear Session (Force Logout)</button>
+            <button onclick="checkSession()">Check Current Session</button>
+            <button onclick="testLeaderboard()">Test Leaderboard</button>
+        </div>
+
+        <div class="test-section" id="sessionInfo">
+            <h2 class="info">📊 SESSION STATUS</h2>
+            <div id="sessionDetails">Click "Check Current Session" to see details</div>
+        </div>
+    </div>
+
+    <script>
+        function clearSession() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('participantName');
+            localStorage.removeItem('loginTime');
+            localStorage.removeItem('challengeStartTime');
+            localStorage.removeItem('leaderboardData');
+            localStorage.removeItem('shadowPagesLeaderboard');
+            
+            document.getElementById('sessionDetails').innerHTML = '<span class="success">✅ Session cleared! You can now test fresh login.</span>';
+            
+            setTimeout(() => {
+                window.location.href = 'login2.html';
+            }, 2000);
+        }
+
+        function checkSession() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const participantName = localStorage.getItem('participantName');
+            const loginTime = localStorage.getItem('loginTime');
+            
+            let status = '';
+            if (isLoggedIn === 'true' && participantName) {
+                const loginDate = new Date(parseInt(loginTime));
+                status = `
+                    <span class="success">✅ LOGGED IN</span><br>
+                    <strong>Username:</strong> ${participantName}<br>
+                    <strong>Login Time:</strong> ${loginDate.toLocaleString()}<br>
+                    <strong>Status:</strong> Authenticated
+                `;
+            } else {
+                status = '<span class="error">❌ NOT LOGGED IN</span><br>Please login to access the system.';
+            }
+            
+            document.getElementById('sessionDetails').innerHTML = status;
+        }
+
+        function testLeaderboard() {
+            if (typeof testLeaderboardUpdate === 'function') {
+                testLeaderboardUpdate();
+                document.getElementById('sessionDetails').innerHTML = '<span class="info">🧪 Leaderboard test executed! Check console for details.</span>';
+            } else {
+                document.getElementById('sessionDetails').innerHTML = '<span class="warning">⚠️ Leaderboard test function not available. Please run from main page.</span>';
+            }
+        }
+
+        // Auto-check session on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkSession();
+        });
+    </script>
+</body>
+</html>
